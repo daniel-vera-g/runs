@@ -5,7 +5,7 @@ import path from 'node:path';
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: '/marathon-training-plan/', // Base path for GitHub Pages
+  base: '/training-block/', // Base path for GitHub Pages
   plugins: [
     react(),
     {

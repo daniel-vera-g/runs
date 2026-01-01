@@ -173,7 +173,7 @@ function App() {
             <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-600 to-violet-600 flex items-center justify-center shadow-lg shadow-blue-500/20">
               <Trophy className="w-5 h-5 text-white" />
             </div>
-            <h1 className="font-bold text-xl tracking-tight">Marathon<span className="text-white/40 font-normal">Plan</span></h1>
+            <h1 className="font-bold text-xl tracking-tight">Training<span className="text-white/40 font-normal">Block</span></h1>
           </div>
           <div className="flex items-center gap-6">
             {/* Save Status */}
@@ -201,7 +201,7 @@ function App() {
             <div className="flex items-center gap-4 text-sm font-medium text-white/50">
               <div className="hidden sm:flex items-center gap-2">
                 <Calendar className="w-4 h-4" />
-                <span>2Q Program</span>
+                <span>Current Block</span>
               </div>
               <div className="flex items-center gap-2">
                 <Activity className="w-4 h-4" />
