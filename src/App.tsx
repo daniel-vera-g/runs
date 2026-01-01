@@ -113,9 +113,11 @@ function App() {
       }
 
       setLastSaved(new Date());
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
-      setError('Failed to save changes');
+      // Show the actual error message if available, otherwise generic
+      const msg = e.message || 'Failed to save changes';
+      setError(`Save failed: ${msg}`);
     } finally {
       setSaving(false);
     }
