@@ -33,7 +33,21 @@ export const parseTrainingPlan = (csvText: string): TrainingWeek[] => {
 
     const dataLines = lines.slice(9).join('\n'); // Keep headers
 
-    const { data } = Papa.parse(dataLines, {
+    // FIX: The specific CSV has unquoted headers with commas "Notes Q1, for Q1"
+    // which causes shifting of columns. We sanitize this known header row.
+    let sanitizedDataLines = dataLines;
+    const headerRow = lines[9];
+    if (headerRow && headerRow.includes('Notes Q1, for Q1')) {
+        // Replace the unquoted header with quoted version in the first line
+        const fixedHeader = headerRow
+            .replace('Notes Q1, for Q1', '"Notes Q1, for Q1"')
+            .replace('Notes Q2, for Q2', '"Notes Q2, for Q2"');
+
+        // Reconstruct data block with fixed header
+        sanitizedDataLines = [fixedHeader, ...lines.slice(10)].join('\n');
+    }
+
+    const { data } = Papa.parse(sanitizedDataLines, {
         header: true,
         skipEmptyLines: true,
         dynamicTyping: true, // Auto convert numbers
@@ -75,8 +89,15 @@ export const parseTrainingPlan = (csvText: string): TrainingWeek[] => {
 
 export const convertToCSV = (weeks: TrainingWeek[], originalHeaderLines: string[]) => {
     // We need to reconstruct the CSV.
-    // 1. Join the original headers
-    const headerSection = originalHeaderLines.join('\n');
+    // 1. Join the original headers but apply the same fix to ensure future stability
+    const headerSection = originalHeaderLines.map(line => {
+        if (line.includes('Notes Q1, for Q1') && !line.includes('"Notes Q1, for Q1"')) {
+            return line
+                .replace('Notes Q1, for Q1', '"Notes Q1, for Q1"')
+                .replace('Notes Q2, for Q2', '"Notes Q2, for Q2"');
+        }
+        return line;
+    }).join('\n');
 
     // 2. Map data to rows
     // Columns: ,,,Weeks until race,Fraction of peak,Workout Q1 (k),Notes Q1, for Q1,Worout Q2 (),Notes Q2, for Q2,Weekly Easy Mileage (k),Actual (k),Difference (k),Notes
